@@ -19,9 +19,6 @@
         
         .screen { animation: fadeIn 0.3s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .nav-item { color: #8e8e93; transition: color 0.2s; }
-        .nav-item.active { color: #2481cc; }
     </style>
 </head>
 <body class="font-sans antialiased flex flex-col min-h-screen">
@@ -43,18 +40,20 @@
     </div>
 
     <!-- Основной контент -->
-    <div class="flex-grow px-4 pb-24">
+    <div class="flex-grow px-4 pb-6">
 
         <!-- ЭКРАН 1: Выбор валюты -->
         <div id="screen-1" class="screen space-y-4">
             <div class="card p-5 rounded-2xl shadow-lg">
-                <h2 class="text-xl font-bold mb-4">Купить криптовалюту</h2>
+                <h2 class="text-xl font-bold mb-4 text-center">Купить криптовалюту</h2>
                 
                 <div class="space-y-4">
                     <!-- Карточка TRX -->
                     <div onclick="selectCoin('TRX')" class="bg-gray-800/50 p-4 rounded-xl flex justify-between items-center cursor-pointer border border-gray-700 hover:border-blue-500 transition">
                         <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center text-red-400 font-bold text-xl">T</div>
+                            <div class="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center bg-white/10">
+                                <img src="https://cryptologos.cc/logos/tron-trx-logo.png" alt="TRX" class="w-8 h-8 object-contain">
+                            </div>
                             <div>
                                 <p class="font-bold text-lg">TRX</p>
                                 <p class="text-xs text-gray-400">Tron</p>
@@ -69,7 +68,9 @@
                     <!-- Карточка HTX -->
                     <div onclick="selectCoin('HTX')" class="bg-gray-800/50 p-4 rounded-xl flex justify-between items-center cursor-pointer border border-gray-700 hover:border-blue-500 transition">
                         <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold text-xl">H</div>
+                            <div class="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center bg-white/10">
+                                <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/2502.png" alt="HTX" class="w-8 h-8 object-contain">
+                            </div>
                             <div>
                                 <p class="font-bold text-lg">HTX</p>
                                 <p class="text-xs text-gray-400">HTX</p>
@@ -84,7 +85,9 @@
                     <!-- Карточка Gram (TON) -->
                     <div onclick="selectCoin('Gram')" class="bg-gray-800/50 p-4 rounded-xl flex justify-between items-center cursor-pointer border border-gray-700 hover:border-blue-500 transition">
                         <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold text-xl">G</div>
+                            <div class="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center bg-white/10">
+                                <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/28171.png" alt="Gram" class="w-8 h-8 object-contain">
+                            </div>
                             <div>
                                 <p class="font-bold text-lg">Gram</p>
                                 <p class="text-xs text-gray-400">TON</p>
@@ -155,11 +158,6 @@
                 </div>
                 <p class="text-xs text-center text-gray-500 mb-6">(Нажмите, чтобы скопировать)</p>
 
-                <div class="bg-red-500/10 border border-red-500/30 text-red-400 p-4 rounded-xl text-xs mb-6">
-                    <b>⚠️ ВНИМАНИЕ!</b><br>
-                    Переводите <b>ТОЛЬКО USDT (TRC-20)</b>. Перевод в другой сети приведет к потере средств.
-                </div>
-
                 <button onclick="showSuccess()" class="w-full btn-primary p-4 rounded-xl font-semibold shadow-lg">Я ОПЛАТИЛ</button>
             </div>
         </div>
@@ -171,24 +169,16 @@
                     <span class="text-4xl">✅</span>
                 </div>
                 <h2 class="text-xl font-bold mb-2 text-green-400">Заявка создана!</h2>
-                <p class="text-sm text-gray-400 mb-6">
+                <p class="text-sm text-gray-400 mb-6 w-full break-words">
                     Ожидайте проверки. После поступления USDT, 
                     <b><span id="final-amount">0</span> <span id="final-coin">TRX</span></b> 
                     будут отправлены на ваш кошелек 
-                    <b><span id="final-wallet">...</span></b>.
+                    <b class="break-all px-1" id="final-wallet">...</b>.
                 </p>
                 <button onclick="resetApp()" class="w-full btn-secondary p-4 rounded-xl font-semibold">Вернуться на главную</button>
             </div>
         </div>
 
-    </div>
-
-    <!-- Нижняя навигация -->
-    <div class="fixed bottom-0 left-0 right-0 bg-[#1c1c1e] border-t border-gray-800 p-3 flex justify-center items-center">
-        <div class="nav-item active flex flex-col items-center gap-1" onclick="showScreen('screen-1')">
-            <span class="text-xl">💱</span>
-            <span class="text-[10px] font-medium">Обмен</span>
-        </div>
     </div>
 
     <script>
