@@ -45,7 +45,6 @@
                 <h2 class="text-xl font-bold mb-4 text-center">Купить криптовалюту</h2>
                 
                 <div class="space-y-4">
-                    <!-- Карточка TRX -->
                     <div onclick="selectCoin('TRX')" class="bg-gray-800/50 p-4 rounded-xl flex justify-between items-center cursor-pointer border border-gray-700 hover:border-blue-500 transition">
                         <div class="flex items-center gap-3">
                             <div class="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center bg-white/10">
@@ -62,7 +61,6 @@
                         </div>
                     </div>
 
-                    <!-- Карточка HTX -->
                     <div onclick="selectCoin('HTX')" class="bg-gray-800/50 p-4 rounded-xl flex justify-between items-center cursor-pointer border border-gray-700 hover:border-blue-500 transition">
                         <div class="flex items-center gap-3">
                             <div class="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center bg-white/10">
@@ -79,7 +77,6 @@
                         </div>
                     </div>
 
-                    <!-- Карточка Gram (TON) -->
                     <div onclick="selectCoin('Gram')" class="bg-gray-800/50 p-4 rounded-xl flex justify-between items-center cursor-pointer border border-gray-700 hover:border-blue-500 transition">
                         <div class="flex items-center gap-3">
                             <div class="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center bg-[#0098EA]/20">
@@ -101,7 +98,6 @@
                 </div>
             </div>
 
-            <!-- Блок преимуществ -->
             <div class="grid grid-cols-2 gap-3">
                 <div class="card p-3 rounded-xl text-center">
                     <div class="text-2xl mb-1">⚡</div>
@@ -115,7 +111,6 @@
                 </div>
             </div>
 
-            <!-- Блок: Как это работает -->
             <div class="card p-5 rounded-2xl shadow-lg">
                 <h3 class="font-bold text-sm mb-3 text-gray-300">Как это работает?</h3>
                 <div class="space-y-3">
@@ -165,14 +160,14 @@
         <!-- ЭКРАН 3: Оплата -->
         <div id="screen-3" class="screen hidden space-y-4">
             <div class="card p-5 rounded-2xl shadow-lg">
-                <button onclick="showScreen('screen-2')" class="text-blue-400 text-sm mb-4 flex items-center gap00-1">
+                <button onclick="showScreen('screen-2')" class="text-blue-400 text-sm mb-4 flex items-center gap-1">
                     ← Назад
-                </</button>
-                <h2 classspan="text-xl font-bold mb-4">О>плата за <span id="coin-label-3 <">TRX</span></h2span>
+                </button>
+                <h2 class="text-xl font-bold mb-4">Оплата за <span id="coin-label-3">TRX</span></h2>
                 
                 <p class="text-sm text-gray-400 mb-1">Сумма к оплате (USDT TRC-20)</p>
                 <div id="payment-amount-box" class="copy-box bg-gray-800/50 p-4 rounded-xl text-center font-bold text-xl mb-4 border border-gray-700" onclick="copyText('payment-amount')">
-                    <span id="payment-amount" class="text-green-400">0. class="text-gray-400 text-sm">USDT</span>
+                    <span id="payment-amount" class="text-green-400">0.00</span> <span class="text-gray-400 text-sm">USDT</span>
                 </div>
 
                 <p class="text-sm text-gray-400 mb-1">Адрес для оплаты (USDT TRC-20)</p>
@@ -215,75 +210,117 @@
         };
 
         const tg = window.Telegram.WebApp;
-        tg.expand(); 
+
+        // Правильное раскрытие на весь экран
+        tg.ready();
+        tg.expand();
+        
+        // Для новых версий Telegram — запрашиваем полный экран
+        if (tg.requestFullscreen) {
+            try { tg.requestFullscreen(); } catch(e) {}
+        }
+        
         tg.setHeaderColor('#0f0f0f');
         tg.setBackgroundColor('#0f0f0f');
 
         let selectedCoin = 'TRX';
 
-        window document.onload = () => {
-            document.getElementById.getElementById('rate-trx-label').innerText(' = CONFIG.rates.TRX;
-network            document.getElementById('rate-for-htx-label').innerText = CON-wFIG.rates.HTX;
-            document.getElementById('rate-gram-label').innerText = CONFIG.rates.Gram;
+        window.onload = () => {
+            try {
+                const trxRate = document.getElementById('rate-trx-label');
+                const htxRate = document.getElementById('rate-htx-label');
+                const gramRate = document.getElementById('rate-gram-label');
+                
+                if (trxRate) trxRate.innerText = CONFIG.rates.TRX;
+                if (htxRate) htxRate.innerText = CONFIG.rates.HTX;
+                if (gramRate) gramRate.innerText = CONFIG.rates.Gram;
+            } catch (e) {
+                console.error('Ошибка инициализации:', e);
+            }
         };
 
         function selectCoin(coin) {
-            selectedCoin = coin;
-            document.getElementById('coin-label').innerText = coin;
-            document.getElementById('coin-label-2').innerText = coin;
-            document.getElementById('coin-label-3').innerText = coin;
-            document.getElementById('final-coin').innerText = coin;
-            
-            let networkHint = 'TRC-20';
-            if (coin === 'Gram') {
-                networkHint = 'TON';
+            try {
+                selectedCoin = coin;
+                
+                const coinLabel = document.getElementById('coin-label');
+                const coinLabel2 = document.getElementById('coin-label-2');
+                const coinLabel3 = document.getElementById('coin-label-3');
+                const finalCoin = document.getElementById('final-coin');
+                const networkForWallet = document.getElementById('network-for-wallet');
+                
+                if (coinLabel) coinLabel.innerText = coin;
+                if (coinLabel2) coinLabel2.innerText = coin;
+                if (coinLabel3) coinLabel3.innerText = coin;
+                if (finalCoin) finalCoin.innerText = coin;
+                
+                let networkHint = 'TRC-20';
+                if (coin === 'Gram') {
+                    networkHint = 'TON';
+                }
+                if (networkForWallet) networkForWallet.innerText = networkHint;
+                
+                showScreen('screen-2');
+            } catch (e) {
+                console.error('Ошибка в selectCoin:', e);
+                tg.showAlert('Ошибка: ' + e.message);
             }
-           allet').innerText = networkHint;
-            
-            showScreen('screen-2');
         }
 
         function calculateTotal() {
-            const amount = parseFloat(document.getElementById('amount-input').value) || 0;
-            const rate = CONFIG.rates[selectedCoin];
-            const total = amount * rate;
-            document.getElementById('total-usdt').innerText = total.toFixed(6);
+            try {
+                const amount = parseFloat(document.getElementById('amount-input').value) || 0;
+                const rate = CONFIG.rates[selectedCoin];
+                const total = amount * rate;
+                document.getElementById('total-usdt').innerText = total.toFixed(6);
+            } catch (e) {
+                console.error('Ошибка в calculateTotal:', e);
+            }
         }
 
         function goToPayment() {
-            const address = document.getElementById('wallet-address').value.trim();
-            const amount = parseFloat(document.getElementById('amount-input').value) || 0;
+            try {
+                const address = document.getElementById('wallet-address').value.trim();
+                const amount = parseFloat(document.getElementById('amount-input').value) || 0;
 
-            if (address.length < 5) {
-                tg.showAlert("Пожалуйста, введите корректный адрес кошелька!");
-                return;
+                if (address.length < 5) {
+                    tg.showAlert("Пожалуйста, введите корректный адрес кошелька!");
+                    return;
+                }
+                if (amount <= 0) {
+                    tg.showAlert("Пожалуйста, введите сумму больше нуля!");
+                    return;
+                }
+
+                const rate = CONFIG.rates[selectedCoin];
+                const totalUsdt = (amount * rate).toFixed(6);
+
+                document.getElementById('payment-address').innerText = CONFIG.usdtWallet;
+                document.getElementById('payment-amount').innerText = totalUsdt;
+                document.getElementById('final-wallet').innerText = address;
+                document.getElementById('final-amount').innerText = amount;
+
+                showScreen('screen-3');
+            } catch (e) {
+                console.error('Ошибка в goToPayment:', e);
+                tg.showAlert('Ошибка: ' + e.message);
             }
-            if (amount <= 0) {
-                tg.showAlert("Пожалуйста, введите сумму больше нуля!");
-                return;
-            }
-
-            const rate = CONFIG.rates[selectedCoin];
-            const totalUsdt = (amount * rate).toFixed(6);
-
-            document.getElementById('payment-address').innerText = CONFIG.usdtWallet;
-            document.getElementById('payment-amount').innerText = totalUsdt;
-            document.getElementById('final-wallet').innerText = address;
-            document.getElementById('final-amount').innerText = amount;
-
-            showScreen('screen-3');
         }
 
         function copyText(elementId) {
-            let textToCopy = elementId === 'payment-amount' 
-                ? document.getElementById('payment-amount').innerText 
-                : document.getElementById('payment-address').innerText;
-            
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                tg.showAlert("Скопировано!");
-            }).catch(() => {
-                tg.showAlert("Ошибка копирования. Выделите текст вручную.");
-            });
+            try {
+                let textToCopy = elementId === 'payment-amount' 
+                    ? document.getElementById('payment-amount').innerText 
+                    : document.getElementById('payment-address').innerText;
+                
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    tg.showAlert("Скопировано!");
+                }).catch(() => {
+                    tg.showAlert("Ошибка копирования. Выделите текст вручную.");
+                });
+            } catch (e) {
+                console.error('Ошибка в copyText:', e);
+            }
         }
 
         function showSuccess() {
@@ -291,20 +328,34 @@ network            document.getElementById('rate-for-htx-label').innerText = CON
         }
 
         function resetApp() {
-            document.getElementById('wallet-address').value = '';
-            document.getElementById('amount-input').value = '';
-            document.getElementById('total-usdt').innerText = '0.00';
-            document.getElementById('final-amount').innerText = '0';
-            showScreen('screen-1');
+            try {
+                document.getElementById('wallet-address').value = '';
+                document.getElementById('amount-input').value = '';
+                document.getElementById('total-usdt').innerText = '0.00';
+                document.getElementById('final-amount').innerText = '0';
+                showScreen('screen-1');
+            } catch (e) {
+                console.error('Ошибка в resetApp:', e);
+            }
         }
 
         function showScreen(screenId) {
-            ['screen-1', 'screen-2', 'screen-3', 'screen-4'].forEach(id => {
-                document.getElementById(id).classList.add('hidden');
-            });
-            document.getElementById(screenId).classList.remove('hidden');
-            
-            window.scrollTo(0, 0);
+            try {
+                const screens = ['screen-1', 'screen-2', 'screen-3', 'screen-4'];
+                screens.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.classList.add('hidden');
+                });
+                const target = document.getElementById(screenId);
+                if (target) {
+                    target.classList.remove('hidden');
+                } else {
+                    console.error('Экран не найден:', screenId);
+                }
+                window.scrollTo(0, 0);
+            } catch (e) {
+                console.error('Ошибка в showScreen:', e);
+            }
         }
     </script>
 </body>
