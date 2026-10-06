@@ -177,7 +177,14 @@
                 <div id="payment-address-box" class="copy-box bg-gray-800/50 p-4 rounded-xl text-center font-mono text-sm mb-2 border border-gray-700 break-all" onclick="copyText('payment-address')">
                     <span id="payment-address"></span>
                 </div>
-                <p class="text-xs text-center text-gray-500 mb-6">(Нажмите, чтобы скопировать)</p>
+                <p class="text-xs text-center text-gray-500 mb-4">(Нажмите, чтобы скопировать)</p>
+
+                <!-- Блок предупреждения -->
+                <div class="bg-red-500/10 border border-red-500/30 text-red-400 p-4 rounded-xl text-xs mb-6">
+                    <b>⚠️ ВНИМАНИЕ!</b><br>
+                    Переводите <b>ТОЛЬКО USDT (TRC-20)</b>. Перевод в другой сети приведёт к потере средств.<br><br>
+                    Перевод <b>неточной суммы</b> также приведёт к потере средств. Пожалуйста, проверяйте сумму и адрес перед отправкой.
+                </div>
 
                 <button onclick="showSuccess()" class="w-full btn-primary p-4 rounded-xl font-semibold shadow-lg">Я ОПЛАТИЛ</button>
             </div>
@@ -215,7 +222,7 @@
         const tg = window.Telegram.WebApp;
 
         tg.ready();
-        tg.expand(); // Раскрываем на доступную высоту, но без полного экрана
+        tg.expand();
         
         tg.setHeaderColor('#0f0f0f');
         tg.setBackgroundColor('#0f0f0f');
