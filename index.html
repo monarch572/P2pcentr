@@ -3,100 +3,198 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>P2P Обменник</title>
+    <title>P2P Центр</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: var(--tg-theme-bg-color, #ffffff); color: var(--tg-theme-text-color, #000000); }
-        .card { background-color: var(--tg-theme-secondary-bg-color, #f1f1f1); }
-        .btn-primary { background-color: var(--tg-theme-button-color, #2481cc); color: var(--tg-theme-button-text-color, #ffffff); }
-        .btn-secondary { background-color: var(--tg-theme-secondary-bg-color, #e0e0e0); color: var(--tg-theme-text-color, #000000); }
-        .input-field { background-color: var(--tg-theme-bg-color, #ffffff); color: var(--tg-theme-text-color, #000000); border: 1px solid #ccc; }
+        /* Базовые переменные Telegram */
+        body { background-color: var(--tg-theme-bg-color, #0f0f0f); color: var(--tg-theme-text-color, #ffffff); }
+        .card { background-color: var(--tg-theme-secondary-bg-color, #1c1c1e); }
+        .btn-primary { background: linear-gradient(135deg, #2481cc, #1a5f9e); color: white; transition: transform 0.1s; }
+        .btn-primary:active { transform: scale(0.97); }
+        .btn-secondary { background-color: var(--tg-theme-secondary-bg-color, #2c2c2e); color: var(--tg-theme-text-color, #ffffff); transition: transform 0.1s; }
+        .btn-secondary:active { transform: scale(0.97); }
+        .input-field { background-color: var(--tg-theme-bg-color, #2c2c2e); color: var(--tg-theme-text-color, #ffffff); border: 1px solid #3a3a3c; }
+        .input-field:focus { border-color: #2481cc; outline: none; }
         .hidden { display: none; }
-        /* Стиль для кнопки копирования */
-        .copy-box { cursor: pointer; transition: 0.2s; }
-        .copy-box:active { opacity: 0.7; }
+        
+        /* Плавные переходы между экранами */
+        .screen { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Стили для нижней навигации */
+        .nav-item { color: #8e8e93; transition: color 0.2s; }
+        .nav-item.active { color: #2481cc; }
     </style>
 </head>
-<body class="p-4 font-sans">
+<body class="font-sans antialiased flex flex-col min-h-screen">
 
-    <!-- ЭКРАН 1: Выбор валюты -->
-    <div id="screen-1" class="space-y-4">
-        <div class="card p-4 rounded-xl shadow-sm">
-            <h2 class="text-xl font-bold mb-2">P2P Центр</h2>
-            <div class="text-sm text-gray-500 mb-4 space-y-1">
-                <p>Курс TRX: <span id="rate-trx-label">0.00</span> USDT</p>
-                <p>Курс LTC: <span id="rate-ltc-label">0.00</span> USDT</p>
+    <!-- Верхняя панель -->
+    <div class="flex items-center justify-between p-4 pt-6">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                P2P
             </div>
-            <div class="space-y-2">
-                <button onclick="selectCoin('TRX')" class="w-full btn-secondary p-3 rounded-lg font-semibold">Купить TRX</button>
-                <button onclick="selectCoin('LTC')" class="w-full btn-secondary p-3 rounded-lg font-semibold">Купить LTC</button>
+            <div>
+                <h1 class="font-bold text-lg leading-tight">P2P Центр</h1>
+                <p class="text-xs text-gray-400">Быстрый обмен криптовалют</p>
             </div>
+        </div>
+        <div class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center">
+            <span class="text-gray-400 text-sm">?</span>
         </div>
     </div>
 
-    <!-- ЭКРАН 2: Ввод данных -->
-    <div id="screen-2" class="hidden space-y-4">
-        <div class="card p-4 rounded-xl shadow-sm">
-            <h2 class="text-xl font-bold mb-4">Покупка <span id="coin-label">TRX</span></h2>
-            
-            <label class="block text-sm mb-1">Введите свой (TRC-20) адрес кошелька</label>
-            <input type="text" id="wallet-address" placeholder="T..." class="input-field w-full p-3 rounded-lg mb-4">
+    <!-- Основной контент (растягивается) -->
+    <div class="flex-grow px-4 pb-24">
 
-            <label class="block text-sm mb-1">Введите количество <span id="coin-label-2">TRX</span> для покупки</label>
-            <input type="number" id="amount-input" oninput="calculateTotal()" placeholder="0.00" class="input-field w-full p-3 rounded-lg mb-2">
-            
-            <p class="text-sm font-semibold mb-4">Итого к оплате: <span id="total-usdt">0.00</span> USDT</p>
+        <!-- ЭКРАН 1: Выбор валюты -->
+        <div id="screen-1" class="screen space-y-4">
+            <div class="card p-5 rounded-2xl shadow-lg">
+                <h2 class="text-xl font-bold mb-4">Купить криптовалюту</h2>
+                
+                <div class="space-y-4">
+                    <!-- Карточка TRX -->
+                    <div onclick="selectCoin('TRX')" class="bg-gray-800/50 p-4 rounded-xl flex justify-between items-center cursor-pointer border border-gray-700 hover:border-blue-500 transition">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center text-red-400 font-bold text-xl">T</div>
+                            <div>
+                                <p class="font-bold text-lg">TRX</p>
+                                <p class="text-xs text-gray-400">Tron (TRC-20)</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-bold text-lg" id="rate-trx-label">0.3</p>
+                            <p class="text-xs text-gray-400">USDT</p>
+                        </div>
+                    </div>
 
-            <button onclick="goToPayment()" class="w-full btn-primary p-3 rounded-lg font-semibold">Перейти к оплате</button>
-            <button onclick="showScreen('screen-1')" class="w-full mt-2 text-sm text-gray-500">Назад</button>
+                    <!-- Карточка LTC -->
+                    <div onclick="selectCoin('LTC')" class="bg-gray-800/50 p-4 rounded-xl flex justify-between items-center cursor-pointer border border-gray-700 hover:border-blue-500 transition">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold text-xl">Ł</div>
+                            <div>
+                                <p class="font-bold text-lg">LTC</p>
+                                <p class="text-xs text-gray-400">Litecoin</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-bold text-lg" id="rate-ltc-label">65</p>
+                            <p class="text-xs text-gray-400">USDT</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Блок преимуществ -->
+            <div class="grid grid-cols-3 gap-3">
+                <div class="card p-3 rounded-xl text-center">
+                    <div class="text-2xl mb-1">⚡</div>
+                    <p class="text-xs font-semibold">Быстро</p>
+                    <p class="text-[10px] text-gray-400">Выплата за 5 мин</p>
+                </div>
+                <div class="card p-3 rounded-xl text-center">
+                    <div class="text-2xl mb-1">🛡️</div>
+                    <p class="text-xs font-semibold">Надежно</p>
+                    <p class="text-[10px] text-gray-400">Ручная проверка</p>
+                </div>
+                <div class="card p-3 rounded-xl text-center">
+                    <div class="text-2xl mb-1">💬</div>
+                    <p class="text-xs font-semibold">Поддержка</p>
+                    <p class="text-[10px] text-gray-400">24/7 на связи</p>
+                </div>
+            </div>
         </div>
+
+        <!-- ЭКРАН 2: Ввод данных -->
+        <div id="screen-2" class="screen hidden space-y-4">
+            <div class="card p-5 rounded-2xl shadow-lg">
+                <button onclick="showScreen('screen-1')" class="text-blue-400 text-sm mb-4 flex items-center gap-1">
+                    ← Назад
+                </button>
+                <h2 class="text-xl font-bold mb-4">Покупка <span id="coin-label">TRX</span></h2>
+                
+                <label class="block text-sm mb-1 text-gray-400">Ваш адрес кошелька (TRC-20)</label>
+                <input type="text" id="wallet-address" placeholder="T..." class="input-field w-full p-3 rounded-xl mb-4 transition">
+
+                <label class="block text-sm mb-1 text-gray-400">Количество <span id="coin-label-2">TRX</span></label>
+                <input type="number" id="amount-input" oninput="calculateTotal()" placeholder="0.00" class="input-field w-full p-3 rounded-xl mb-4 transition">
+                
+                <div class="bg-gray-800/50 p-4 rounded-xl mb-6 flex justify-between items-center">
+                    <span class="text-sm text-gray-400">Итого к оплате:</span>
+                    <span class="font-bold text-lg text-green-400"><span id="total-usdt">0.00</span> USDT</span>
+                </div>
+
+                <button onclick="goToPayment()" class="w-full btn-primary p-4 rounded-xl font-semibold shadow-lg">Перейти к оплате</button>
+            </div>
+        </div>
+
+        <!-- ЭКРАН 3: Оплата -->
+        <div id="screen-3" class="screen hidden space-y-4">
+            <div class="card p-5 rounded-2xl shadow-lg">
+                <button onclick="showScreen('screen-2')" class="text-blue-400 text-sm mb-4 flex items-center gap-1">
+                    ← Назад
+                </button>
+                <h2 class="text-xl font-bold mb-4">Оплата за <span id="coin-label-3">TRX</span></h2>
+                
+                <p class="text-sm text-gray-400 mb-1">Сумма к оплате (USDT TRC-20)</p>
+                <div id="payment-amount-box" class="copy-box bg-gray-800/50 p-4 rounded-xl text-center font-bold text-xl mb-4 border border-gray-700" onclick="copyText('payment-amount')">
+                    <span id="payment-amount" class="text-green-400">0.00</span> <span class="text-gray-400 text-sm">USDT</span>
+                </div>
+
+                <p class="text-sm text-gray-400 mb-1">Адрес для оплаты (USDT TRC-20)</p>
+                <div id="payment-address-box" class="copy-box bg-gray-800/50 p-4 rounded-xl text-center font-mono text-sm mb-2 border border-gray-700 break-all" onclick="copyText('payment-address')">
+                    <span id="payment-address"></span>
+                </div>
+                <p class="text-xs text-center text-gray-500 mb-6">(Нажмите, чтобы скопировать)</p>
+
+                <div class="bg-red-500/10 border border-red-500/30 text-red-400 p-4 rounded-xl text-xs mb-6">
+                    <b>⚠️ ВНИМАНИЕ!</b><br>
+                    Переводите <b>ТОЛЬКО USDT (TRC-20)</b>. Перевод в другой сети приведет к потере средств.
+                </div>
+
+                <button onclick="showSuccess()" class="w-full btn-primary p-4 rounded-xl font-semibold shadow-lg">Я ОПЛАТИЛ</button>
+            </div>
+        </div>
+
+        <!-- ЭКРАН 4: Успех -->
+        <div id="screen-4" class="screen hidden space-y-4">
+            <div class="card p-6 rounded-2xl shadow-lg text-center">
+                <div class="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span class="text-4xl">✅</span>
+                </div>
+                <h2 class="text-xl font-bold mb-2 text-green-400">Заявка создана!</h2>
+                <p class="text-sm text-gray-400 mb-6">
+                    Ожидайте проверки. После поступления USDT, <b><span id="final-coin">TRX</span></b> будут отправлены на ваш кошелек <b><span id="final-wallet">...</span></b>.
+                </p>
+                <button onclick="resetApp()" class="w-full btn-secondary p-4 rounded-xl font-semibold">Вернуться на главную</button>
+            </div>
+        </div>
+
     </div>
 
-    <!-- ЭКРАН 3: Оплата -->
-    <div id="screen-3" class="hidden space-y-4">
-        <div class="card p-4 rounded-xl shadow-sm">
-            <h2 class="text-xl font-bold mb-4">Оплата за <span id="coin-label-3">TRX</span></h2>
-            
-            <p class="text-sm mb-1">Сумма к оплате (USDT TRC-20)</p>
-            <div id="payment-amount-box" class="copy-box bg-gray-200 p-3 rounded-lg text-center font-bold text-lg mb-4" onclick="copyText('payment-amount')">
-                <span id="payment-amount">0.00</span> USDT
-            </div>
-
-            <p class="text-sm mb-1">Адрес для оплаты (USDT TRC-20)</p>
-            <div id="payment-address-box" class="copy-box bg-gray-200 p-3 rounded-lg text-center font-mono font-bold mb-2 break-all" onclick="copyText('payment-address')">
-                <span id="payment-address"></span>
-            </div>
-            <p class="text-xs text-center text-gray-500 mb-4">(Нажмите на сумму или адрес, чтобы скопировать)</p>
-
-            <div class="bg-red-100 text-red-700 p-3 rounded-lg text-xs mb-4">
-                <b>ВНИМАНИЕ!</b><br>
-                Переводите <b>ТОЛЬКО USDT (TRC-20)</b> на указанный адрес. Перевод неточной суммы или в другой сети приведет к потере средств.
-            </div>
-
-            <button onclick="showSuccess()" class="w-full btn-primary p-3 rounded-lg font-semibold">Я ОПЛАТИЛ</button>
-            <button onclick="showScreen('screen-2')" class="w-full mt-2 text-sm text-gray-500">Назад</button>
+    <!-- Нижняя навигация (фича для заполнения) -->
+    <div class="fixed bottom-0 left-0 right-0 bg-[#1c1c1e] border-t border-gray-800 p-3 flex justify-around items-center">
+        <div class="nav-item active flex flex-col items-center gap-1" onclick="showScreen('screen-1')">
+            <span class="text-xl">💱</span>
+            <span class="text-[10px] font-medium">Обмен</span>
         </div>
-    </div>
-
-    <!-- ЭКРАН 4: Успех -->
-    <div id="screen-4" class="hidden space-y-4">
-        <div class="card p-4 rounded-xl shadow-sm text-center">
-            <h2 class="text-xl font-bold mb-2 text-green-500">Заявка создана!</h2>
-            <p class="text-sm mb-4">
-                Пожалуйста, ожидайте. После проверки поступления USDT, <b><span id="final-coin">TRX</span></b> будут отправлены на ваш кошелек <b><span id="final-wallet">...</span></b>.
-            </p>
-            <button onclick="resetApp()" class="w-full btn-secondary p-3 rounded-lg font-semibold">Вернуться на главную</button>
+        <div class="nav-item flex flex-col items-center gap-1" onclick="tg.showAlert('История пока пуста')">
+            <span class="text-xl">📜</span>
+            <span class="text-[10px] font-medium">История</span>
+        </div>
+        <div class="nav-item flex flex-col items-center gap-1" onclick="tg.showAlert('Напишите нам: @your_support')">
+            <span class="text-xl">💬</span>
+            <span class="text-[10px] font-medium">Поддержка</span>
         </div>
     </div>
 
     <script>
         // === НАСТРОЙКИ (МЕНЯЙТЕ ЗДЕСЬ) ===
         const CONFIG = {
-            // Курс: сколько USDT стоит 1 монета
             rates: {
-                TRX: 0.3, 
-                LTC: 65.00
+                TRX: 0.3,   // Сколько USDT стоит 1 TRX
+                LTC: 65.00  // Сколько USDT стоит 1 LTC
             },
             // Ваш ЕДИНЫЙ адрес для приема USDT (TRC-20)
             usdtWallet: "THKjJbTveDZYtSXhKzT7w3VkoGdipXe4G8" 
@@ -105,6 +203,8 @@
 
         const tg = window.Telegram.WebApp;
         tg.expand(); 
+        tg.setHeaderColor('#0f0f0f');
+        tg.setBackgroundColor('#0f0f0f');
 
         let selectedCoin = 'TRX';
 
@@ -115,12 +215,10 @@
 
         function selectCoin(coin) {
             selectedCoin = coin;
-            
             document.getElementById('coin-label').innerText = coin;
             document.getElementById('coin-label-2').innerText = coin;
             document.getElementById('coin-label-3').innerText = coin;
             document.getElementById('final-coin').innerText = coin;
-            
             showScreen('screen-2');
         }
 
@@ -147,7 +245,6 @@
             const rate = CONFIG.rates[selectedCoin];
             const totalUsdt = (amount * rate).toFixed(2);
 
-            // Заполняем экран оплаты
             document.getElementById('payment-address').innerText = CONFIG.usdtWallet;
             document.getElementById('payment-amount').innerText = totalUsdt;
             document.getElementById('final-wallet').innerText = address;
@@ -155,27 +252,19 @@
             showScreen('screen-3');
         }
 
-        // Функция копирования
         function copyText(elementId) {
-            let textToCopy = "";
-            if (elementId === 'payment-amount') {
-                textToCopy = document.getElementById('payment-amount').innerText;
-            } else if (elementId === 'payment-address') {
-                textToCopy = document.getElementById('payment-address').innerText;
-            }
+            let textToCopy = elementId === 'payment-amount' 
+                ? document.getElementById('payment-amount').innerText 
+                : document.getElementById('payment-address').innerText;
             
             navigator.clipboard.writeText(textToCopy).then(() => {
                 tg.showAlert("Скопировано!");
-            }).catch(err => {
-                // Фолбэк для старых версий Telegram
+            }).catch(() => {
                 tg.showAlert("Ошибка копирования. Выделите текст вручную.");
             });
         }
 
         function showSuccess() {
-            // Здесь можно добавить логику отправки данных вам в бота
-            // (например, через fetch запрос на ваш сервер или Google Sheets)
-            
             showScreen('screen-4');
         }
 
@@ -191,6 +280,13 @@
                 document.getElementById(id).classList.add('hidden');
             });
             document.getElementById(screenId).classList.remove('hidden');
+            
+            // Обновляем активную вкладку в нижней навигации
+            document.querySelectorAll('.nav-item').forEach((el, index) => {
+                if (index === 0 && screenId === 'screen-1') el.classList.add('active');
+                else if (index !== 0) el.classList.remove('active');
+            });
+            
             window.scrollTo(0, 0);
         }
     </script>
