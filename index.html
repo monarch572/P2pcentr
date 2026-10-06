@@ -66,17 +66,32 @@
                         </div>
                     </div>
 
-                    <!-- Карточка LTC -->
-                    <div onclick="selectCoin('LTC')" class="bg-gray-800/50 p-4 rounded-xl flex justify-between items-center cursor-pointer border border-gray-700 hover:border-blue-500 transition">
+                    <!-- Карточка HTX -->
+                    <div onclick="selectCoin('HTX')" class="bg-gray-800/50 p-4 rounded-xl flex justify-between items-center cursor-pointer border border-gray-700 hover:border-blue-500 transition">
                         <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold text-xl">Ł</div>
+                            <div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold text-xl">H</div>
                             <div>
-                                <p class="font-bold text-lg">LTC</p>
-                                <p class="text-xs text-gray-400">Litecoin</p>
+                                <p class="font-bold text-lg">HTX</p>
+                                <p class="text-xs text-gray-400">HTX</p>
                             </div>
                         </div>
                         <div class="text-right">
-                            <p class="font-bold text-lg" id="rate-ltc-label">65</p>
+                            <p class="font-bold text-lg" id="rate-htx-label">0.000003</p>
+                            <p class="text-xs text-gray-400">USDT</p>
+                        </div>
+                    </div>
+
+                    <!-- Карточка Gram (TON) -->
+                    <div onclick="selectCoin('Gram')" class="bg-gray-800/50 p-4 rounded-xl flex justify-between items-center cursor-pointer border border-gray-700 hover:border-blue-500 transition">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold text-xl">G</div>
+                            <div>
+                                <p class="font-bold text-lg">Gram</p>
+                                <p class="text-xs text-gray-400">TON</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-bold text-lg" id="rate-gram-label">1.35</p>
                             <p class="text-xs text-gray-400">USDT</p>
                         </div>
                     </div>
@@ -106,8 +121,8 @@
                 </button>
                 <h2 class="text-xl font-bold mb-4">Покупка <span id="coin-label">TRX</span></h2>
                 
-                <label class="block text-sm mb-1 text-gray-400">Ваш адрес кошелька (TRC-20)</label>
-                <input type="text" id="wallet-address" placeholder="T..." class="input-field w-full p-3 rounded-xl mb-4 transition">
+                <label class="block text-sm mb-1 text-gray-400">Ваш адрес кошелька (<span id="network-for-wallet">TRC-20</span>)</label>
+                <input type="text" id="wallet-address" placeholder="Введите адрес..." class="input-field w-full p-3 rounded-xl mb-4 transition">
 
                 <label class="block text-sm mb-1 text-gray-400">Количество <span id="coin-label-2">TRX</span></label>
                 <input type="number" id="amount-input" oninput="calculateTotal()" placeholder="0.00" class="input-field w-full p-3 rounded-xl mb-4 transition">
@@ -180,9 +195,11 @@
         const CONFIG = {
             rates: {
                 TRX: 0.3,   
-                LTC: 65.00  
+                HTX: 0.000003,
+                Gram: 1.35
             },
-            usdtWallet: "THKjJbTveDZYtSXhKzT7w3VkoGdipXe4G8" 
+            // Ваш единственный адрес для приема USDT (TRC-20)
+            usdtWallet: "THKjJbTveDZYtSXhKzT7w3VkoGdipXe4G8"
         };
 
         const tg = window.Telegram.WebApp;
@@ -194,7 +211,8 @@
 
         window.onload = () => {
             document.getElementById('rate-trx-label').innerText = CONFIG.rates.TRX;
-            document.getElementById('rate-ltc-label').innerText = CONFIG.rates.LTC;
+            document.getElementById('rate-htx-label').innerText = CONFIG.rates.HTX;
+            document.getElementById('rate-gram-label').innerText = CONFIG.rates.Gram;
         };
 
         function selectCoin(coin) {
@@ -203,6 +221,14 @@
             document.getElementById('coin-label-2').innerText = coin;
             document.getElementById('coin-label-3').innerText = coin;
             document.getElementById('final-coin').innerText = coin;
+            
+            // Меняем подсказку сети в зависимости от монеты
+            let networkHint = 'TRC-20';
+            if (coin === 'Gram') {
+                networkHint = 'TON';
+            }
+            document.getElementById('network-for-wallet').innerText = networkHint;
+            
             showScreen('screen-2');
         }
 
@@ -210,14 +236,14 @@
             const amount = parseFloat(document.getElementById('amount-input').value) || 0;
             const rate = CONFIG.rates[selectedCoin];
             const total = amount * rate;
-            document.getElementById('total-usdt').innerText = total.toFixed(2);
+            document.getElementById('total-usdt').innerText = total.toFixed(6);
         }
 
         function goToPayment() {
             const address = document.getElementById('wallet-address').value.trim();
             const amount = parseFloat(document.getElementById('amount-input').value) || 0;
 
-            if (address.length < 15) {
+            if (address.length < 5) {
                 tg.showAlert("Пожалуйста, введите корректный адрес кошелька!");
                 return;
             }
@@ -227,12 +253,11 @@
             }
 
             const rate = CONFIG.rates[selectedCoin];
-            const totalUsdt = (amount * rate).toFixed(2);
+            const totalUsdt = (amount * rate).toFixed(6);
 
             document.getElementById('payment-address').innerText = CONFIG.usdtWallet;
             document.getElementById('payment-amount').innerText = totalUsdt;
             document.getElementById('final-wallet').innerText = address;
-            // Сохраняем количество для финального экрана
             document.getElementById('final-amount').innerText = amount;
 
             showScreen('screen-3');
