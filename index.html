@@ -157,7 +157,10 @@
                 </div>
                 <h2 class="text-xl font-bold mb-2 text-green-400">Заявка создана!</h2>
                 <p class="text-sm text-gray-400 mb-6">
-                    Ожидайте проверки. После поступления USDT, <b><span id="final-coin">TRX</span></b> будут отправлены на ваш кошелек <b><span id="final-wallet">...</span></b>.
+                    Ожидайте проверки. После поступления USDT, 
+                    <b><span id="final-amount">0</span> <span id="final-coin">TRX</span></b> 
+                    будут отправлены на ваш кошелек 
+                    <b><span id="final-wallet">...</span></b>.
                 </p>
                 <button onclick="resetApp()" class="w-full btn-secondary p-4 rounded-xl font-semibold">Вернуться на главную</button>
             </div>
@@ -179,7 +182,6 @@
                 TRX: 0.3,   
                 LTC: 65.00  
             },
-            // ВАШ КОШЕЛЕК ДЛЯ ПРИЕМА USDT (TRC-20)
             usdtWallet: "THKjJbTveDZYtSXhKzT7w3VkoGdipXe4G8" 
         };
 
@@ -230,6 +232,8 @@
             document.getElementById('payment-address').innerText = CONFIG.usdtWallet;
             document.getElementById('payment-amount').innerText = totalUsdt;
             document.getElementById('final-wallet').innerText = address;
+            // Сохраняем количество для финального экрана
+            document.getElementById('final-amount').innerText = amount;
 
             showScreen('screen-3');
         }
@@ -254,6 +258,7 @@
             document.getElementById('wallet-address').value = '';
             document.getElementById('amount-input').value = '';
             document.getElementById('total-usdt').innerText = '0.00';
+            document.getElementById('final-amount').innerText = '0';
             showScreen('screen-1');
         }
 
