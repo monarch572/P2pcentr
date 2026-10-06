@@ -34,9 +34,6 @@
                 <p class="text-xs text-gray-400">Криптовалюта по низким ценам</p>
             </div>
         </div>
-        <div class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center">
-            <span class="text-gray-400 text-sm">?</span>
-        </div>
     </div>
 
     <!-- Основной контент -->
@@ -85,8 +82,11 @@
                     <!-- Карточка Gram (TON) -->
                     <div onclick="selectCoin('Gram')" class="bg-gray-800/50 p-4 rounded-xl flex justify-between items-center cursor-pointer border border-gray-700 hover:border-blue-500 transition">
                         <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center bg-white/10">
-                                <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/28171.png" alt="Gram" class="w-8 h-8 object-contain">
+                            <div class="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center bg-[#0098EA]/20">
+                                <svg viewBox="0 0 56 56" class="w-10 h-10">
+                                    <circle cx="28" cy="28" r="28" fill="#0098EA"/>
+                                    <path d="M37.5603 15.6277H18.4386C14.9228 15.6277 12.6944 19.4202 14.4632 22.4861L26.2644 42.9409C27.0345 44.2765 28.9644 44.2765 29.7345 42.9409L41.5381 22.4861C43.3045 19.4251 41.0761 15.6277 37.5627 15.6277H37.5603ZM26.2548 36.8068L23.6847 31.8327L17.4833 20.7414C17.0742 20.0315 17.5795 19.1218 18.4362 19.1218H26.2524V36.8092L26.2548 36.8068ZM38.5108 20.739L32.3118 31.8351L29.7417 36.8068V19.1194H37.5579C38.4146 19.1194 38.9199 20.0291 38.5108 20.739Z" fill="white"/>
+                                </svg>
                             </div>
                             <div>
                                 <p class="font-bold text-lg">Gram</p>
@@ -112,6 +112,29 @@
                     <div class="text-2xl mb-1">🛡️</div>
                     <p class="text-xs font-semibold">Надежно</p>
                     <p class="text-[10px] text-gray-400">Ручная проверка</p>
+                </div>
+            </div>
+
+            <!-- Блок: Как это работает -->
+            <div class="card p-5 rounded-2xl shadow-lg">
+                <h3 class="font-bold text-sm mb-3 text-gray-300">Как это работает?</h3>
+                <div class="space-y-3">
+                    <div class="flex items-start gap-3">
+                        <div class="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 text-xs font-bold flex-shrink-0">1</div>
+                        <p class="text-xs text-gray-400">Выберите монету и введите свой адрес кошелька</p>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <div class="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 text-xs font-bold flex-shrink-0">2</div>
+                        <p class="text-xs text-gray-400">Отправьте нужную сумму USDT (TRC-20) на указанный адрес</p>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <div class="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 text-xs font-bold flex-shrink-0">3</div>
+                        <p class="text-xs text-gray-400">Нажмите «Я оплатил» и дождитесь проверки</p>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <div class="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 text-xs font-bold flex-shrink-0">4</div>
+                        <p class="text-xs text-gray-400">Монеты будут отправлены на ваш кошелек в течение 5–15 минут</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -142,14 +165,14 @@
         <!-- ЭКРАН 3: Оплата -->
         <div id="screen-3" class="screen hidden space-y-4">
             <div class="card p-5 rounded-2xl shadow-lg">
-                <button onclick="showScreen('screen-2')" class="text-blue-400 text-sm mb-4 flex items-center gap-1">
+                <button onclick="showScreen('screen-2')" class="text-blue-400 text-sm mb-4 flex items-center gap00-1">
                     ← Назад
-                </button>
-                <h2 class="text-xl font-bold mb-4">Оплата за <span id="coin-label-3">TRX</span></h2>
+                </</button>
+                <h2 classspan="text-xl font-bold mb-4">О>плата за <span id="coin-label-3 <">TRX</span></h2span>
                 
                 <p class="text-sm text-gray-400 mb-1">Сумма к оплате (USDT TRC-20)</p>
                 <div id="payment-amount-box" class="copy-box bg-gray-800/50 p-4 rounded-xl text-center font-bold text-xl mb-4 border border-gray-700" onclick="copyText('payment-amount')">
-                    <span id="payment-amount" class="text-green-400">0.00</span> <span class="text-gray-400 text-sm">USDT</span>
+                    <span id="payment-amount" class="text-green-400">0. class="text-gray-400 text-sm">USDT</span>
                 </div>
 
                 <p class="text-sm text-gray-400 mb-1">Адрес для оплаты (USDT TRC-20)</p>
@@ -188,7 +211,6 @@
                 HTX: 0.000003,
                 Gram: 1.35
             },
-            // Ваш единственный адрес для приема USDT (TRC-20)
             usdtWallet: "THKjJbTveDZYtSXhKzT7w3VkoGdipXe4G8"
         };
 
@@ -199,9 +221,9 @@
 
         let selectedCoin = 'TRX';
 
-        window.onload = () => {
-            document.getElementById('rate-trx-label').innerText = CONFIG.rates.TRX;
-            document.getElementById('rate-htx-label').innerText = CONFIG.rates.HTX;
+        window document.onload = () => {
+            document.getElementById.getElementById('rate-trx-label').innerText(' = CONFIG.rates.TRX;
+network            document.getElementById('rate-for-htx-label').innerText = CON-wFIG.rates.HTX;
             document.getElementById('rate-gram-label').innerText = CONFIG.rates.Gram;
         };
 
@@ -212,12 +234,11 @@
             document.getElementById('coin-label-3').innerText = coin;
             document.getElementById('final-coin').innerText = coin;
             
-            // Меняем подсказку сети в зависимости от монеты
             let networkHint = 'TRC-20';
             if (coin === 'Gram') {
                 networkHint = 'TON';
             }
-            document.getElementById('network-for-wallet').innerText = networkHint;
+           allet').innerText = networkHint;
             
             showScreen('screen-2');
         }
